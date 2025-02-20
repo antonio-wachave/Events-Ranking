@@ -3,7 +3,7 @@ package mz.com.connect.events.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "tb_subcription")
+@Table(name = "tb_subscriptions")
 public class Subscription {
 
     @Id

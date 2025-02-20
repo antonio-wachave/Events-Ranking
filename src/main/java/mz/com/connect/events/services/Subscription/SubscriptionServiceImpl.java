@@ -1,5 +1,6 @@
 package mz.com.connect.events.services.Subscription;
 
+import mz.com.connect.events.exception.EventNotFoundException;
 import mz.com.connect.events.models.Event;
 import mz.com.connect.events.models.Subscription;
 import mz.com.connect.events.models.User;
@@ -28,10 +29,19 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Subscription subs = new Subscription();
 
         Event event = this.eventRepository.findByPrettyName(eventName);
-        this.userRepository.save(user);
+
+        if(event == null){
+            throw new EventNotFoundException(" Evento "+eventName+" nao existe. ");
+        }
+
+        User newUser = this.userRepository.findByEmail(user.getEmail());
+
+        if(newUser == null){
+            this.userRepository.save(user);
+        }
 
         subs.setEvent(event);
-        subs.setSubscriber(user);
+        subs.setSubscriber(newUser);
 
         return this.subscriptionRepository.save(subs);
 

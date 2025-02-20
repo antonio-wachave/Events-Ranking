@@ -1,5 +1,7 @@
 package mz.com.connect.events.controllers;
 
+import mz.com.connect.events.dto.ErrorMessage;
+import mz.com.connect.events.exception.EventNotFoundException;
 import mz.com.connect.events.models.Subscription;
 import mz.com.connect.events.models.User;
 import mz.com.connect.events.services.Subscription.SubscriptionService;
@@ -21,8 +23,12 @@ public class SubscriptionController {
 
         Subscription newSubscription = this.subscriptionService.createNewSubscription(prettyName, user);
 
-        if(newSubscription != null){
-            return ResponseEntity.status(HttpStatus.CREATED).body(newSubscription);
+        try {
+            if (newSubscription != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(newSubscription);
+            }
+        }catch ( EventNotFoundException efe){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body( new ErrorMessage(efe.getMessage()));
         }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" usuario nao encontrado!");
     }
