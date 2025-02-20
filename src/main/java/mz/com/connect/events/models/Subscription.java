@@ -4,31 +4,31 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_subcription")
-public class Subcription {
+public class Subscription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subcription_number")
-    private Integer subcriptionNumber;
+    @Column(name = "subscription_number")
+    private Integer subscriptionNumber;
 
     @ManyToOne
     @JoinColumn(name="event_id", nullable = true)
     private Event event;
 
     @ManyToOne
-    @JoinColumn(name="subcriber_user_id")
+    @JoinColumn(name="subscriber_user_id")
     private User subscriber;
 
     @ManyToOne
-    @JoinColumn(name="indecation_user_id", nullable = true)
+    @JoinColumn(name="indication_user_id", nullable = true)
     private User indication;
 
-    public Integer getSubcriptionNumber() {
-        return subcriptionNumber;
+    public Integer getSubscriptionNumber() {
+        return subscriptionNumber;
     }
 
-    public void setSubcriptionNumber(Integer subcriptionNumber) {
-        this.subcriptionNumber = subcriptionNumber;
+    public void setSubscriptionNumber(Integer subscriptionNumber) {
+        this.subscriptionNumber = subscriptionNumber;
     }
 
     public Event getEvent() {
