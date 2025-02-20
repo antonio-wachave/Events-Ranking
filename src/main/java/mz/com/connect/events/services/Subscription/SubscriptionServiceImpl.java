@@ -1,6 +1,7 @@
 package mz.com.connect.events.services.Subscription;
 
 import mz.com.connect.events.exception.EventNotFoundException;
+import mz.com.connect.events.exception.SubscriptionConflictException;
 import mz.com.connect.events.models.Event;
 import mz.com.connect.events.models.Subscription;
 import mz.com.connect.events.models.User;
@@ -26,12 +27,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Subscription createNewSubscription(String eventName, User user) {
 
-        Subscription subs = new Subscription();
-
         Event event = this.eventRepository.findByPrettyName(eventName);
 
         if(event == null){
-            throw new EventNotFoundException(" Evento "+eventName+" nao existe. ");
+            throw new EventNotFoundException(" Evento "+eventName+" não existe. ");
         }
 
         User newUser = this.userRepository.findByEmail(user.getEmail());
@@ -40,10 +39,32 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             this.userRepository.save(user);
         }
 
-        subs.setEvent(event);
-        subs.setSubscriber(newUser);
+        Subscription existSubs = this.subscriptionRepository.findByEventAndSubscriber(event,user);
 
-        return this.subscriptionRepository.save(subs);
+        if(existSubs != null){
+            throw new SubscriptionConflictException(" Ja existe inscricao para o usuario!");
+        }
+
+        /*
+        User indicator = this.userRepository.findById(userId).orElse(null);
+
+        if(indicator == null){
+            throw new UserIndicatorNotFoundException(" usuario "+indicator+" nao existe. ");
+        }
+        */
+
+        Subscription subs = new Subscription();
+
+        subs.setEvent(event);
+        subs.setSubscriber(user);
+        //subs.setIndication(indicator);
+
+
+       Subscription saveSubs = this.subscriptionRepository.save(subs);
+
+        return saveSubs;
+
+        //return new SubscriberResponse(saveSubs.getSubscriptionNumber(),"http://codecraft.com/"+saveSubs.getEvent().getPrettyName()+"/"+saveSubs.getSubscriber().getId());
 
     }
 }
