@@ -20,8 +20,18 @@ public class Subscription {
     private User subscriber;
 
     @ManyToOne
-    @JoinColumn(name="indication_user_id", nullable = true)
+    @JoinColumn(name="indication_user_id", nullable = false)
     private User indication;
+
+    public Subscription(){
+
+    }
+
+    public Subscription(Event event, User subscriber, User indication) {
+        this.event = event;
+        this.subscriber = subscriber;
+        this.indication = indication;
+    }
 
     public Integer getSubscriptionNumber() {
         return subscriptionNumber;
@@ -53,5 +63,15 @@ public class Subscription {
 
     public void setIndication(User indication) {
         this.indication = indication;
+    }
+
+    @Override
+    public String toString() {
+        return "Subscription{" +
+                "subscriptionNumber=" + subscriptionNumber +
+                ", event=" + event +
+                ", subscriber=" + subscriber +
+                ", indication=" + indication +
+                '}';
     }
 }

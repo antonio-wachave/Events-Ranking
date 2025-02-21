@@ -1,7 +1,9 @@
 package mz.com.connect.events.services.Subscription;
 
+import mz.com.connect.events.dto.SubscriberResponse;
 import mz.com.connect.events.exception.EventNotFoundException;
 import mz.com.connect.events.exception.SubscriptionConflictException;
+import mz.com.connect.events.exception.UserIndicatorNotFoundException;
 import mz.com.connect.events.models.Event;
 import mz.com.connect.events.models.Subscription;
 import mz.com.connect.events.models.User;
@@ -23,9 +25,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private UserRepository userRepository;
 
-
     @Override
-    public Subscription createNewSubscription(String eventName, User user) {
+    public SubscriberResponse createNewSubscription(String eventName, User user, Integer userId) {
 
         Event event = this.eventRepository.findByPrettyName(eventName);
 
@@ -39,32 +40,27 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             this.userRepository.save(user);
         }
 
-        Subscription existSubs = this.subscriptionRepository.findByEventAndSubscriber(event,user);
-
-        if(existSubs != null){
-            throw new SubscriptionConflictException(" Ja existe inscricao para o usuario!");
-        }
-
-        /*
         User indicator = this.userRepository.findById(userId).orElse(null);
 
         if(indicator == null){
             throw new UserIndicatorNotFoundException(" usuario "+indicator+" nao existe. ");
         }
-        */
 
         Subscription subs = new Subscription();
 
         subs.setEvent(event);
         subs.setSubscriber(user);
-        //subs.setIndication(indicator);
+        subs.setIndication(indicator);
 
+        Subscription existSubs = this.subscriptionRepository.findByEventAndSubscriber(event,user);
+
+        if(existSubs != null){
+            throw new SubscriptionConflictException(" Ja existe inscricao para o usuario!"+user.getName()+" no evento "+event.getTitle());
+        }
 
        Subscription saveSubs = this.subscriptionRepository.save(subs);
 
-        return saveSubs;
-
-        //return new SubscriberResponse(saveSubs.getSubscriptionNumber(),"http://codecraft.com/"+saveSubs.getEvent().getPrettyName()+"/"+saveSubs.getSubscriber().getId());
+       return new SubscriberResponse(saveSubs.getSubscriptionNumber(),"http://codecraft.com/"+saveSubs.getEvent().getPrettyName()+"/"+saveSubs.getSubscriber().getId());
 
     }
 }

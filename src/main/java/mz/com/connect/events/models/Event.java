@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="event_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer eventId;
 
     @Column(name = "title", length = 255, nullable = false)

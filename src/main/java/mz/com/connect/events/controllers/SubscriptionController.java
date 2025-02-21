@@ -5,7 +5,6 @@ import mz.com.connect.events.dto.SubscriberResponse;
 import mz.com.connect.events.exception.EventNotFoundException;
 import mz.com.connect.events.exception.SubscriptionConflictException;
 import mz.com.connect.events.exception.UserIndicatorNotFoundException;
-import mz.com.connect.events.models.Subscription;
 import mz.com.connect.events.models.User;
 import mz.com.connect.events.services.Subscription.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +23,16 @@ public class SubscriptionController {
     public ResponseEntity<?> createSubscription(@PathVariable String prettyName, @RequestBody User user,@PathVariable(required = false) Integer userId){
 
         try{
-            Subscription newSubscription = this.subscriptionService.createNewSubscription(prettyName,user);
+            SubscriberResponse newSubscription = this.subscriptionService.createNewSubscription(prettyName,user,userId);
             if (newSubscription != null) {
                 return ResponseEntity.status(HttpStatus.CREATED).body(newSubscription);
             }
         }catch ( EventNotFoundException efe){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(efe.getMessage()));
-        }catch ( SubscriptionConflictException sce){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage(sce.getMessage()));
-        }catch (UserIndicatorNotFoundException uic){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(uic.getMessage()));
+        }catch ( SubscriptionConflictException efe){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessage(efe.getMessage()));
+        }catch (UserIndicatorNotFoundException efe){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorMessage(efe.getMessage()));
         }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(" usuario nao encontrado!");
     }
