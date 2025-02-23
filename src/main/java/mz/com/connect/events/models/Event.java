@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Entity
@@ -34,16 +35,16 @@ public class Event {
     private LocalDate endDate;
 
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     public Event() {
 
     }
 
-    public Event(String title, String prettyName, String location, Double price, LocalDate startDate, LocalDate endDate, LocalDateTime startTime, LocalDateTime endTime) {
+    public Event(String title, String prettyName, String location, Double price, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         this.title = title;
         this.prettyName = prettyName;
         this.location = location;
@@ -110,20 +111,20 @@ public class Event {
         this.endDate = endDate;
     }
 
-    public LocalDateTime getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
